@@ -1,86 +1,78 @@
 import os
 import asyncio
-from datetime import datetime, timezone
 from dotenv import load_dotenv
 from telethon import TelegramClient
 from telethon.tl.types import MessageService
 import pandas as pd
 
-# Загрузка переменных окружения
+# Загружаем .env
 load_dotenv()
 
-# Проверка обязательных переменных
-required_vars = ['TG_API_ID', 'TG_API_HASH', 'CHANNEL_ID']
-for var in required_vars:
-    if not os.getenv(var):
-        raise ValueError(f"❌ Переменная {var} отсутствует в .env")
-
+# Переменные окружения
 api_id = int(os.getenv('TG_API_ID'))
 api_hash = os.getenv('TG_API_HASH')
 session_name = os.getenv('TG_SESSION', 'tg_session')
 channel_id = int(os.getenv('CHANNEL_ID'))
 
-# Константы
-START_DATE = datetime(2024, 1, 1, tzinfo=timezone.utc)
-BATCH_SIZE = 150
-SLEEP_SECONDS = 2
-
+# Подключение Telethon-клиента
 client = TelegramClient(session_name, api_id, api_hash)
-all_data = []
 
-async def fetch_posts():
+async def fetch_last_posts(limit=200):
     await client.start()
-    print("✅ Подключение к Telegram")
-    
+    print("✅ Подключение к Telegram установлено")
+
     try:
         channel = await client.get_entity(channel_id)
     except Exception as e:
-        print(f"❌ Ошибка доступа к каналу: {e}")
+        print(f"❌ Не удалось получить доступ к каналу: {e}")
+        return pd.DataFrame()
+
+    messages = []
+    async for msg in client.iter_messages(channel, limit=limit, reverse=False):
+        if isinstance(msg, MessageService) or not msg.date:
+            continue
+
+        data = {
+            'date': msg.date,
+            'message_id': msg.id,
+            'text': msg.text[:1000] if msg.text else '',
+            'views': getattr(msg, 'views', 0),
+            'forwards': getattr(msg, 'forwards', 0),
+            'comments': msg.replies.replies if msg.replies else 0,
+            'reactions': {r.reaction.emoticon: r.count for r in msg.reactions.results} if msg.reactions else {},
+            'reactions_count': sum(r.count for r in msg.reactions.results) if msg.reactions else 0,
+            'post_link': f"https://t.me/c/{str(channel_id).replace('-100', '')}/{msg.id}"
+        }
+        messages.append(data)
+
+    return pd.DataFrame(messages)
+
+# Основная функция
+async def main():
+    new_posts_df = await fetch_last_posts()
+
+    if new_posts_df.empty:
+        print("⚠️ Новых данных нет")
         return
 
-    offset_id = 0
-    total_messages = 0
+    # Попытка прочитать старый файл
+    try:
+        existing_posts_df = pd.read_csv('telegram_posts_history.csv')
+    except FileNotFoundError:
+        print("⚠️ Файл telegram_posts_history.csv не найден.")
+        existing_posts_df = pd.DataFrame()
 
-    while True:
-        messages = []
-        async for msg in client.iter_messages(channel, limit=BATCH_SIZE, offset_id=offset_id):
-            if isinstance(msg, MessageService) or not msg.date:
-                continue
-            if msg.date < START_DATE:
-                print(f"🏁 Достигнута стартовая дата {START_DATE} — завершение")
-                return
-            messages.append(msg)
+    if not existing_posts_df.empty:
+        merged_df = pd.concat([existing_posts_df.set_index('message_id'), new_posts_df.set_index('message_id')])
+        merged_df = merged_df[~merged_df.index.duplicated(keep='last')].reset_index()
+        print("🔄 Данные успешно обновлены")
+    else:
+        merged_df = new_posts_df
+        print("📥 Создан новый датафрейм с последними постами")
 
-        if not messages:
-            break
+    merged_df.to_csv('telegram_posts_history.csv', index=False)
+    print(merged_df.head())
 
-        for message in messages:
-            data = {
-                'date': message.date,
-                'message_id': message.id,
-                'text': message.text[:1000] if message.text else '',
-                'views': getattr(message, 'views', 0),
-                'forwards': getattr(message, 'forwards', 0),
-                'comments': message.replies.replies if message.replies else 0,
-                'reactions': {r.reaction.emoticon: r.count for r in message.reactions.results} if message.reactions else {},
-                'post_link': f"https://t.me/c/{str(channel_id).replace('-100', '')}/{message.id}"
-            }
-            all_data.append(data)
-
-        total_messages += len(messages)
-        offset_id = messages[-1].id  # ID последнего сообщения
-        print(f"📦 Получено {total_messages} сообщений. Ждем {SLEEP_SECONDS} сек.")
-        await asyncio.sleep(SLEEP_SECONDS)
-
-# Запуск
+# Запуск кода
 with client:
-    client.loop.run_until_complete(fetch_posts())
-
-# Сохраняем
-if all_data:
-    df = pd.DataFrame(all_data)
-    print(df.head())
-    df.to_csv('telegram_posts_history.csv', index=False)
-    print("✅ Сохранено в telegram_posts_history.csv")
-else:
-    print("⚠️ Нет данных для сохранения")
+    client.loop.run_until_complete(main())
