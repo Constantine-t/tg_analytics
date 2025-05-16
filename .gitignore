@@ -19,6 +19,7 @@ telegram_posts_history.csv
 # Google API и OAuth
 token.json
 client_secret.json
+credentials.json
 
 # Jupyter
 .ipynb_checkpoints
