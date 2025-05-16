@@ -95,7 +95,7 @@ async def main():
     # Сохраняем
     merged_df.to_csv('telegram_posts_history.csv', index=False)
     print("✅ Файл telegram_posts_history.csv успешно сохранён.")
-    print(merged_df.head())
+    print(merged_df.head(), merged_df.shape)
 
 
 # Запуск кода

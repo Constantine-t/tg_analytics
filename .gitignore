@@ -12,6 +12,9 @@ credentials.json
 secrets.json
 *.pem
 *.key
+telegram_posts_history.csv
+*.session
+
 
 # Google API и OAuth
 token.json
