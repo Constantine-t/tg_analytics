@@ -3,6 +3,8 @@ import asyncio
 from dotenv import load_dotenv
 from telethon import TelegramClient
 from telethon.tl.types import MessageService
+from telethon.tl.functions.channels import GetFullChannelRequest
+from datetime import timezone, timedelta
 import pandas as pd
 
 # Загружаем .env
@@ -14,11 +16,14 @@ api_hash = os.getenv('TG_API_HASH')
 session_name = os.getenv('TG_SESSION', 'tg_session')
 channel_id = int(os.getenv('CHANNEL_ID'))
 
+# МСК временная зона
+moscow_tz = timezone(timedelta(hours=3))
+
 # Подключение Telethon-клиента
 client = TelegramClient(session_name, api_id, api_hash)
 
 
-async def fetch_last_posts(limit=200):
+async def fetch_last_posts(limit=250):
     await client.start()
     print("✅ Подключение к Telegram установлено")
 
@@ -27,6 +32,8 @@ async def fetch_last_posts(limit=200):
     except Exception as e:
         print(f"❌ Не удалось получить доступ к каналу: {e}")
         return pd.DataFrame()
+    full = await client(GetFullChannelRequest(channel))           # RPC-запрос к TDLib
+    subscribers = getattr(full.full_chat, "participants_count", 0)
 
     messages = []
     async for msg in client.iter_messages(channel, limit=limit, reverse=False):  # От нового к старому
@@ -34,7 +41,7 @@ async def fetch_last_posts(limit=200):
             continue
 
         data = {
-            'date': msg.date,
+            'date': msg.date.astimezone(moscow_tz).strftime('%Y-%m-%d %H:%M'),
             'message_id': msg.id,
             'text': msg.text[:1000] if msg.text else '',
             'views': getattr(msg, 'views', 0),
@@ -42,6 +49,7 @@ async def fetch_last_posts(limit=200):
             'comments': msg.replies.replies if msg.replies else 0,
             'reactions': {r.reaction.emoticon: r.count for r in msg.reactions.results} if msg.reactions else {},
             'reactions_count': sum(r.count for r in msg.reactions.results) if msg.reactions else 0,
+            "subscribers": subscribers, 
             'post_link': f"https://t.me/c/{str(channel_id).replace('-100', '')}/{msg.id}"
         }
         messages.append(data)
