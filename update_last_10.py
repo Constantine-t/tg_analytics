@@ -43,7 +43,7 @@ async def fetch_last_posts(limit=250):
         data = {
             'date': msg.date.astimezone(moscow_tz).strftime('%Y-%m-%d %H:%M'),
             'message_id': msg.id,
-            'text': msg.text[:1000] if msg.text else '',
+            'text': msg.text[:1000] if msg.text is not None else None,
             'views': getattr(msg, 'views', 0),
             'forwards': getattr(msg, 'forwards', 0),
             'comments': msg.replies.replies if msg.replies else 0,
