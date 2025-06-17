@@ -1,4 +1,4 @@
-# Telegram Channel Analytics Pipeline 📊 For Russian, scroll down ⬇️
+# Telegram Channel Analytics Pipeline  Russian
 
 **For Python 3.9+**
 
@@ -6,13 +6,13 @@ An automated system for extracting, updating, and synchronizing Telegram channel
 
 ---
 
-## 📌 Project Overview
+##  Project Overview
 
 This project automates the collection and updating of Telegram channel data, ensuring timely analytical reports and dashboards.
 
 ---
 
-## 🚀 Features
+##  Features
 
 ### Scripts
 
@@ -24,7 +24,7 @@ This project automates the collection and updating of Telegram channel data, ens
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 telegram-analytics/
@@ -49,7 +49,7 @@ telegram-analytics/
 
 ---
 
-## ⚙️ Installation
+##  Installation
 
 ### 1. Clone Repository
 ```bash
@@ -80,7 +80,7 @@ CHANNEL_ID=your_channel_id
 
 ---
 
-## 🚀 Usage
+##  Usage
 
 ### Full Extraction of Posts
 ```bash
@@ -99,7 +99,7 @@ python sync_to_sheets.py
 
 ---
 
-## 📅 Automating Execution
+##  Automating Execution
 
 It's recommended to use Cron (Linux) or Task Scheduler (Windows) to regularly update data:
 
@@ -112,13 +112,13 @@ Example cron job (every 30 minutes):
 
 ---
 
-## ⚠️ Ignored Files
+##  Ignored Files
 
 Files listed in `.gitignore` contain sensitive data and must not be uploaded to the repository (e.g., API keys, session files, Google Sheets configurations).
 
 ---
 
-## 💡 Future Improvements
+##  Future Improvements
 - Implement automatic alerts based on key metric changes.
 - Extend analytical capabilities using DataLens.
 - Enhance error handling and logging.
@@ -131,13 +131,13 @@ Files listed in `.gitignore` contain sensitive data and must not be uploaded to 
 
 ---
 
-## 📌 Описание проекта
+##  Описание проекта
 
 Проект автоматизирует сбор и обновление данных из Telegram-канала, обеспечивая актуальность аналитических отчётов и дашбордов.
 
 ---
 
-## 🚀 Функционал
+##  Функционал
 
 ### Скрипты
 
@@ -149,7 +149,7 @@ Files listed in `.gitignore` contain sensitive data and must not be uploaded to 
 
 ---
 
-## 📂 Структура проекта
+##  Структура проекта
 
 ```
 telegram-analytics/
@@ -166,7 +166,7 @@ telegram-analytics/
 
 ---
 
-## 🛠 Технические детали
+##  Технические детали
 
 - **Telegram API**: используется библиотека Telethon.
 - **Python**: Pandas, asyncio для асинхронной работы.
@@ -174,7 +174,7 @@ telegram-analytics/
 
 ---
 
-## ⚙️ Установка
+##  Установка
 
 ### 1. Клонирование репозитория
 ```bash
@@ -205,7 +205,7 @@ CHANNEL_ID=ваш_channel_id
 
 ---
 
-## 🚀 Запуск
+##  Запуск
 
 ### Полная выгрузка постов
 ```bash
@@ -224,7 +224,7 @@ python sync_to_sheets.py
 
 ---
 
-## 📅 Автоматизация запуска
+##  Автоматизация запуска
 
 Рекомендуется использовать Cron (Linux) или Планировщик заданий (Windows) для регулярного обновления данных:
 
@@ -237,13 +237,13 @@ python sync_to_sheets.py
 
 ---
 
-## ⚠️ Игнорируемые файлы
+##  Игнорируемые файлы
 
 Файлы, указанные в `.gitignore`, содержат чувствительные данные и не должны загружаться в репозиторий (например, API-ключи, сессии, конфиги Google Sheets).
 
 ---
 
-## 💡 Будущие улучшения
+##  Будущие улучшения
 - Внедрение автоматических алертов при изменении ключевых метрик.
 - Расширение аналитических возможностей с помощью DataLens.
 - Улучшение обработки ошибок и логирования.
