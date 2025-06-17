@@ -4,7 +4,8 @@
 
 An automated system for extracting, updating, and synchronizing Telegram channel posts for further analysis in Google Sheets and Yandex DataLens.
 
-[Read in Russian](https://github.com/Constantine-t/tg_analytics/edit/main/README.md#%D0%BF%D0%B0%D0%B9%D0%BF%D0%BB%D0%B0%D0%B9%D0%BD-%D0%B0%D0%BD%D0%B0%D0%BB%D0%B8%D1%82%D0%B8%D0%BA%D0%B8-%D1%82%D0%B5%D0%BB%D0%B5%D0%B3%D1%80%D0%B0%D0%BC-%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%D0%B0)
+[Read in Russian](#пайплайн-аналитики-телеграм-канала)
+
 ---
 
 ##  Project Overview
