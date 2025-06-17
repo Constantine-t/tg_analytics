@@ -1,4 +1,131 @@
+# Telegram Channel Analytics Pipeline 📊 For Russian, scroll down ⬇️
+
+**For Python 3.9+**
+
+An automated system for extracting, updating, and synchronizing Telegram channel posts for further analysis in Google Sheets and Yandex DataLens.
+
+---
+
+## 📌 Project Overview
+
+This project automates the collection and updating of Telegram channel data, ensuring timely analytical reports and dashboards.
+
+---
+
+## 🚀 Features
+
+### Scripts
+
+| Script | Description |
+|--------|-------------|
+| **`main.py`** | Extracts the complete post history starting from a specified date (default is 01.01.2024). Batch loading of 250 messages with delays to prevent rate-limit issues. |
+| **`update_last_10.py`** | Updates the last 250 posts by adding new messages and updating existing ones in a CSV file. |
+| **`sync_to_sheets.py`** | Uploads the latest CSV data to Google Sheets via a service account. |
+
+---
+
+## 📂 Project Structure
+
+```
+telegram-analytics/
+├── .env                        # Environment variables (secrets and API keys)
+├── credentials.json            # Google Sheets API credentials (service account)
+├── main.py                     # Main script to extract all posts
+├── update_last_10.py           # Script for updating recent posts
+├── sync_to_sheets.py           # Script for synchronization with Google Sheets
+├── telegram_posts_history.csv  # Telegram posts data
+├── .gitignore                  # List of ignored files
+├── README.md                   # Project description
+└── requirements.txt            # Python dependencies
+```
+
+---
+
+## 🛠 Technical Details
+
+- **Telegram API**: Utilizes the Telethon library.
+- **Python**: Uses Pandas and asyncio for asynchronous operations.
+- **Google Sheets API**: Authorized via a service account.
+
+---
+
+## ⚙️ Installation
+
+### 1. Clone Repository
+```bash
+git clone <your-repository-url>
+cd telegram-analytics
+```
+
+### 2. Set up Virtual Environment and Install Dependencies
+```bash
+python -m venv env
+source env/bin/activate  # Linux/macOS
+.\env\Scripts\activate   # Windows
+pip install -r requirements.txt
+```
+
+### 3. Configure Environment Variables
+
+Create a `.env` file:
+```env
+TG_API_ID=your_api_id
+TG_API_HASH=your_api_hash
+CHANNEL_ID=your_channel_id
+```
+
+### 4. Configure Google Sheets
+- Place your `credentials.json` file in the project's root directory.
+- Create a Google Sheet with a specific name and sheet.
+
+---
+
+## 🚀 Usage
+
+### Full Extraction of Posts
+```bash
+python main.py
+```
+
+### Updating Recent Posts
+```bash
+python update_last_10.py
+```
+
+### Synchronizing with Google Sheets
+```bash
+python sync_to_sheets.py
+```
+
+---
+
+## 📅 Automating Execution
+
+It's recommended to use Cron (Linux) or Task Scheduler (Windows) to regularly update data:
+
+Example cron job (every 30 minutes):
+
+```bash
+*/30 * * * * /path/to/env/bin/python /path/to/project/update_last_10.py
+*/30 * * * * /path/to/env/bin/python /path/to/project/sync_to_sheets.py
+```
+
+---
+
+## ⚠️ Ignored Files
+
+Files listed in `.gitignore` contain sensitive data and must not be uploaded to the repository (e.g., API keys, session files, Google Sheets configurations).
+
+---
+
+## 💡 Future Improvements
+- Implement automatic alerts based on key metric changes.
+- Extend analytical capabilities using DataLens.
+- Enhance error handling and logging.
+
 # Telegram Channel Analytics Pipeline 📊
+
+**Необходим Python 3.9 и выше**
 
 Автоматическая система выгрузки, обновления и синхронизации постов Telegram-канала для последующего анализа в Google Sheets и Yandex DataLens.
 
