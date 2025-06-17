@@ -43,7 +43,7 @@ telegram-analytics/
 
 ---
 
-## 🛠 Technical Details
+##  Technical Details
 
 - **Telegram API**: Utilizes the Telethon library.
 - **Python**: Uses Pandas and asyncio for asynchronous operations.
